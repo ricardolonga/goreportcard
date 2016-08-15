@@ -1,7 +1,25 @@
 all: lint build test
 
+NAME    = goreportcard
+VERSION = latest
+
 build:
 	go build ./...
+
+image: build
+	docker build -t=ricardolonga/$(NAME):$(VERSION) .
+
+run:
+	docker run -d --name report -p 80:8000 ricardolonga/$(NAME):$(VERSION)
+
+logs:
+	docker logs -f report
+
+rm:
+	docker rm -vf report
+
+push:
+	docker push ricardolonga/$(NAME):$(VERSION)
 
 install: 
 	./scripts/make-install.sh
